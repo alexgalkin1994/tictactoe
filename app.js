@@ -29,8 +29,17 @@ function clearField(){
     });
 }
 
+function resetGame(){
+    document.querySelector(".restartBtn").addEventListener("click", function(){
+        isRunning = true
+        clearField();
+        val = "X"
+        wonText.innerHTML = "Tic Tac Toe"
+    });
+}
+
 function checkWin(){
-    let full = checkIfFull()
+
     if(
         (field1.innerHTML === "X" && field2.innerHTML === "X" && field3.innerHTML === "X") ||
         (field4.innerHTML === "X" && field5.innerHTML === "X" && field6.innerHTML === "X") ||
@@ -48,43 +57,42 @@ function checkWin(){
         (field2.innerHTML === "O" && field5.innerHTML === "O" && field8.innerHTML === "O") ||
         (field3.innerHTML === "O" && field6.innerHTML === "O" && field9.innerHTML === "O") ||
         (field1.innerHTML === "O" && field5.innerHTML === "O" && field9.innerHTML === "O") ||
-        (field7.innerHTML === "O" && field5.innerHTML === "O" && field3.innerHTML === "O") ||
-        (full)
+        (field7.innerHTML === "O" && field5.innerHTML === "O" && field3.innerHTML === "O")
         ){
-            console.log("WIN")
-            isRunning = false
-            if(full){
-                wonText.innerHTML = "Draw"
-            }
-            else{
-                wonText.innerHTML = val + " Won!"
-            }
-
-            document.querySelector(".restartBtn").addEventListener("click", function(){
-                isRunning = true
-                clearField();
-                val = "X"
-                wonText.innerHTML = "Tic Tac Toe"
-            });
-            
+            return true
         }
-
+        return false
 };
 
 
 
 fieldArr.forEach(function(elem) {
+    if(isRunning){
         elem.addEventListener("click", function() {
-                if(elem.innerHTML.length == 0 && isRunning){
-                    elem.innerHTML = val
-                    checkWin();
-                    if (val === 'X'){
-                        val = 'O'
-                    } else {
-                        val = 'X'
-                    }
-                    
-                } 
-        });
+            if(elem.innerHTML.length == 0 && isRunning){
+                elem.innerHTML = val
+
+                if (checkIfFull()){
+                    wonText.innerHTML = "Draw"
+                    isRunning = false
+                    resetGame()
+                }
+
+                if(checkWin()){
+                    wonText.innerHTML = val + " Won!"
+                    isRunning = false
+                    resetGame()
+                }
+
+                if (val === 'X'){
+                    val = 'O'
+                } else {
+                    val = 'X'
+                }
+                
+            } 
+    });
+    }
+
      
 });
